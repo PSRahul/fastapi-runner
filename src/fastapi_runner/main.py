@@ -16,10 +16,10 @@ async def root():
     return {"message":"Hello!"}
 
 @app.get("/items/{item_id}")
-async def read_item(item_id:int, short:bool=False):
+async def read_item(item_id:int, extras:str,short:bool=False):
     if short:
         return "item_id, short set on"
-    return {"item_id":item_id}
+    return {"item_id":item_id,"extras":extras}
 
 @app.get("/models/{model_name}")
 async def get_model_name(model_name: ModelList):
