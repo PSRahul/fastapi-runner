@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from enum import Enum
 import numpy as np
-
+from src.fastapi_runner.data_model import ProductModel
 
 class ModelList(str,Enum):
     alexnet = "alexnet"
@@ -38,3 +38,7 @@ async def read_file(file_path:str):
 async def arange_list( end:int,start:int=45):
     return np.arange(start,end).tolist()
 
+
+@app.post("/items/")
+async def create_product(product:ProductModel):
+    return product
