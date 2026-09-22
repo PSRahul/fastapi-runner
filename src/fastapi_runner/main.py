@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI,Query
 from enum import Enum
 import numpy as np
 from src.fastapi_runner.data_model import ProductModel
-
+from typing import Annotated
+from pydantic import AfterValidator
 class ModelList(str,Enum):
     alexnet = "alexnet"
     resnet = "resnet"
@@ -42,3 +43,19 @@ async def arange_list( end:int,start:int=45):
 @app.post("/items/")
 async def create_product(product:ProductModel):
     return product
+
+@app.post("/items/read/")
+async def read_items(q:Annotated[list[str]|None,Query(title="test_tile",description="test_description")]=None):
+    default={"test_key":"test_values"}
+    if q:
+        default.update({"q":q})
+    return default
+
+def starts_with_s(s:str):
+    if s[0]!='s':
+        raise ValueError("must start with s")
+    return s
+
+@app.post("/items/valid_read/")
+async def read_valid_items(id:Annotated[str|None,AfterValidator(starts_with_s)]):
+    return id
